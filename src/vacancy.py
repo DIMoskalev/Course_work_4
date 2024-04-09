@@ -83,6 +83,19 @@ class Vacancy:
         else:
             return f'Данные не указаны'
 
+    def get_responsibility(self):
+        if self.responsibility:
+            return self.responsibility
+        else:
+            return f'Данные не указаны'
+
+    def __gt__(self, other):
+        if isinstance(other, (Vacancy, int)):
+            raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
+        if type(other) is type(self):
+            return self.salary_from > other.salary_from
+        return self.salary_from > other
+
     def __str__(self):
         return (f'-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-'
                 f'\nВакансия: {self.name}\n'
@@ -93,6 +106,6 @@ class Vacancy:
                 f'{self.get_salary()} {self.get_currency()}\n'
                 f'Работодатель: {self.employer}\n'
                 f'Требования: {self.get_requirement()}\n'
-                f'Обязанности: {self.responsibility}\n'
+                f'Обязанности: {self.get_responsibility()}\n'
                 f'Ссылка на вакансию: {self.url}\n'
                 f'-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-')

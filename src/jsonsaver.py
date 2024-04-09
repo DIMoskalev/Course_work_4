@@ -8,9 +8,6 @@ class JSONSaver(Saver):
     def __init__(self, file_path):
         self.file_path = file_path
 
-    def get_vacancy(self, vacancies):
-        pass
-
     def add_vacancy(self, vacancies):
         pass
 

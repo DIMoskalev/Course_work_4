@@ -7,10 +7,6 @@ class Saver(ABC):
         pass
 
     @abstractmethod
-    def get_vacancy(self, vacancy):
-        pass
-
-    @abstractmethod
     def add_vacancy(self, vacancy):
         pass
 

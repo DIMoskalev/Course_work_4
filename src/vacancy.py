@@ -51,10 +51,10 @@ class Vacancy:
                 return f'Зарплата: от {self.salary_from}'
             elif self.salary_from is None:
                 return f'Зарплата: до {self.salary_to}'
-            elif self.salary_from and self.salary_to:
-                return f'Зарплата: от {self.salary_from} до {self.salary_to}'
             elif self.salary_from == self.salary_to:
                 return f'Зарплата: {self.salary_to}'
+            elif self.salary_from and self.salary_to:
+                return f'Зарплата: от {self.salary_from} до {self.salary_to}'
         else:
             return f'Зарплата: Не указана'
 
@@ -72,6 +72,8 @@ class Vacancy:
                 return "долл."
             elif self.currency == "EUR":
                 return "евро"
+            elif self.currency is None:
+                return "попугаев"
             else:
                 return f'Неизвестная валюта {self.currency}'
         else:
@@ -85,7 +87,7 @@ class Vacancy:
 
     def get_responsibility(self):
         if self.responsibility:
-            return self.responsibility
+            return self.responsibility.replace('<highlighttext>', '').replace('</highlighttext>', '')
         else:
             return f'Данные не указаны'
 

@@ -1,13 +1,12 @@
 class Vacancy:
 
     def __init__(self, name, professional_roles, experience, employment, schedule,
-                 employer, salary_from, salary_to, currency, requirement, responsibility, url, salary=None):
+                 employer, salary_from, salary_to, currency, requirement, responsibility, url):
         self.name = name
         self.professional_roles = professional_roles
         self.experience = experience
         self.employment = employment
         self.schedule = schedule
-        self.salary = salary
         self.salary_from = salary_from
         self.salary_to = salary_to
         self.currency = currency
@@ -25,78 +24,90 @@ class Vacancy:
             experience = vacancy.get('experience').get('name')
             employment = vacancy['employment']['name']
             schedule = vacancy['schedule']['name']
-            if vacancy['salary'] is None:
-                salary = None
+            if not vacancy['salary']:
                 salary_from = 0
                 salary_to = 0
-                currency = None
+                currency = 0
             else:
-                salary = vacancy['salary']
-                salary_from = vacancy['salary']['from']
-                salary_to = vacancy['salary']['to']
-                currency = vacancy['salary']['currency']
+                salary_from = cls.check_data_int(vacancy['salary']['from'])
+                salary_to = cls.check_data_int(vacancy['salary']['to'])
+                currency = cls.check_data_str(vacancy['salary']['currency'])
             employer = vacancy['employer']['name']
-            requirement = vacancy['snippet']['requirement']
-            responsibility = vacancy['snippet']['responsibility']
+            requirement = cls.check_data_str(vacancy['snippet']['requirement'])
+            responsibility = cls.check_data_str(vacancy['snippet']['responsibility'])
             url = vacancy['alternate_url']
             object_vac = cls(name, professional_roles, experience, employment, schedule,
                              employer, salary_from, salary_to, currency, requirement,
-                             responsibility, url, salary)
+                             responsibility, url)
             emp_list.append(object_vac)
         return emp_list
 
     def get_salary(self):
-        if self.salary:
-            if self.salary_to is None:
-                return f'Зарплата: от {self.salary_from}'
-            elif self.salary_from is None:
-                return f'Зарплата: до {self.salary_to}'
-            elif self.salary_from == self.salary_to:
-                return f'Зарплата: {self.salary_to}'
-            elif self.salary_from and self.salary_to:
-                return f'Зарплата: от {self.salary_from} до {self.salary_to}'
-        else:
+        if not (self.salary_to or self.salary_from):
             return f'Зарплата: Не указана'
+        else:
+            if not self.salary_to:
+                return f'Зарплата: от {self.salary_from} {self.currency}'
+            elif not self.salary_from:
+                return f'Зарплата: до {self.salary_to} {self.currency}'
+            elif self.salary_from == self.salary_to:
+                return f'Зарплата: {self.salary_to} {self.currency}'
+            return f'Зарплата: от {self.salary_from} до {self.salary_to} {self.currency}'
 
-    def get_currency(self):
-        if self.salary:
-            if self.currency == "RUR":
+    def get_currency(self, currency):
+        if currency:
+            if currency == "RUR":
                 return "руб."
-            elif self.currency == "KZT":
+            elif currency == "KZT":
                 return "тенге"
-            elif self.currency == "BYR":
+            elif currency == "BYR":
                 return "белорус. руб"
-            elif self.currency == "UZS":
+            elif currency == "UZS":
                 return "узбек. сум"
-            elif self.currency == "USD":
+            elif currency == "USD":
                 return "долл."
-            elif self.currency == "EUR":
+            elif currency == "EUR":
                 return "евро"
-            elif self.currency is None:
+            elif not currency:
                 return "попугаев"
             else:
                 return f'Неизвестная валюта {self.currency}'
         else:
             return ""
 
-    def get_requirement(self):
-        if self.requirement:
-            return self.requirement.replace('<highlighttext>', '').replace('</highlighttext>', '')
+    @staticmethod
+    def check_data_str(data):
+        if data:
+            return data
         else:
             return f'Данные не указаны'
 
-    def get_responsibility(self):
-        if self.responsibility:
-            return self.responsibility.replace('<highlighttext>', '').replace('</highlighttext>', '')
-        else:
-            return f'Данные не указаны'
+    @staticmethod
+    def check_data_int(data):
+        if data:
+            return data
+        return 0
 
     def __gt__(self, other):
-        if isinstance(other, (Vacancy, int)):
+        if not isinstance(other, (Vacancy, int)):
             raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
         if type(other) is type(self):
             return self.salary_from > other.salary_from
         return self.salary_from > other
+
+    def __ge__(self, other):
+        if not isinstance(other, (Vacancy, int)):
+            raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
+        if type(other) is type(self):
+            return self.salary_from >= other.salary_from
+        return self.salary_from >= other
+
+    def __le__(self, other):
+        if not isinstance(other, (Vacancy, int)):
+            raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
+        if type(other) is type(self):
+            return self.salary_from <= other.salary_from
+        return self.salary_from <= other
 
     def __str__(self):
         return (f'-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-'
@@ -105,9 +116,9 @@ class Vacancy:
                 f'Требуемый опыт: {self.experience}\n'
                 f'Тип занятости: {self.employment}\n'
                 f'График: {self.schedule}\n'
-                f'{self.get_salary()} {self.get_currency()}\n'
+                f'{self.get_salary()}\n'
                 f'Работодатель: {self.employer}\n'
-                f'Требования: {self.get_requirement()}\n'
-                f'Обязанности: {self.get_responsibility()}\n'
+                f'Требования: {self.requirement.replace("<highlighttext>", "").replace("</highlighttext>", "")}\n'
+                f'Обязанности: {self.responsibility.replace("<highlighttext>", "").replace("</highlighttext>", "")}\n'
                 f'Ссылка на вакансию: {self.url}\n'
                 f'-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-')

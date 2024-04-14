@@ -17,18 +17,25 @@ class JSONFileHandler(Handler):
             data_for_write = []
             for data in vacancies:
                 data_for_write.append(data.__dict__)
+            json.dump(data_for_write, file, ensure_ascii=False, indent=4)
+
+    def add_vacancy(self, vacancy):
+        with open(self.file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            data.append(vacancy)
+        with open(self.file_path, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
-    def add_vacancy(self, vacancies):
-        with open(self.file_path, 'a+', encoding='utf-8') as file:
-            data = json.load(file)
-            for vacancy in vacancies:
-                data.append(vacancy.__dict__)
-        json.dump(data, file, ensure_ascii=False, indent=4)
+    def add_vacancies(self, vacancies):
+        data = self.get_vacancies()
+        for vacancy in vacancies:
+            data.append(vacancy.__dict__)
+        with open(self.file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
 
     def del_vacancy(self, vacancy):
-        with open(self.file_path, 'a+', encoding='utf-8') as file:
+        with open(self.file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-            if vacancy in data:
-                data.remove(vacancy)
-        json.dump(data, file, ensure_ascii=False, indent=4)
+            data.remove(vacancy)
+        with open(self.file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)

@@ -1,4 +1,8 @@
+import os.path
+
+from config import ROOT_DIR
 from src.headhunter_api import HeadhunterAPI
+from src.json_file_handler import JSONFileHandler
 from src.vacancy import Vacancy
 
 
@@ -49,3 +53,97 @@ def print_vacancies(top_vacancies):
     """Функция выводит все вакансий из полученного списка"""
     for vacancy in top_vacancies:
         print(vacancy)
+
+
+def work_with_vacancies_from_api():
+    """Функция позволяет пользователю получать данные по вакансиям
+    с сайта hh.ru с помощью api."""
+    print('Добро пожаловать в программу поиска вакансий с сайта hh.ru!\n'
+          'Данная часть программы позволяет работать с api hh.ru\n'
+          'Функции программы представлены ниже.\n')
+    user_input = 0
+
+    while user_input not in ['back', 'назад']:
+        user_input = input('Выберите, какую команду хотите выполнить:\n'
+                           '1 - Запрос по ключевому слову - обязательная стартовая операция!\n'
+                           '2 - Выполнить фильтрацию по ключевым словам\n'
+                           '3 - Отфильтровать вакансии по диапазону зарплат\n'
+                           '4 - Отсортировать вакансии в порядке убывания минимальной зарплаты\n'
+                           '5 - Оставить топ N вакансий от начала списка\n'
+                           '6 - Вывести информацию о вакансиях\n'
+                           '7 - Сохранить текущие вакансии в json-файл\n')
+        if user_input in ['1', '2', '3', '4', '5', '6', '7']:
+            if user_input == '1':
+                search_query = input('Введите ключевое слово для поиска вакансий:\n')
+                vacancies_list = get_vacancies(search_query)
+                print(f'Запрос по ключевому слову выполнен, список с вакансиями создан\n'
+                      f'Вакансий в списке: {len(vacancies_list)} шт.')
+            try:
+                bool(vacancies_list)
+            except UnboundLocalError:
+                print('Для работы с вакансиями необходимо выполнить запрос по ключевому слову!')
+                continue
+        if user_input == '2':
+            filter_words = input("Введите ключевые слова для фильтрации вакансий через пробел: ").split()
+            vacancies_list = filter_vacancies(vacancies_list, filter_words)
+            print(f'Выполнена фильтрация вакансий по ключевым словам\n'
+                  f'Вакансий в списке: {len(vacancies_list)} шт.\n')
+        if user_input == '3':
+            while True:
+                salary_range = input("Введите диапазон зарплат в формате '50000 - 60000':\n").split()
+                if len(salary_range) == 3:
+                    break
+            vacancies_list = get_vacancies_by_salary(vacancies_list, salary_range)
+            print(f'Зарплаты отфильтрованы по указанному диапазону зарплат\n'
+                  f'Вакансий в списке: {len(vacancies_list)} шт.\n')
+        if user_input == '4':
+            vacancies_list = sort_vacancies(vacancies_list)
+            print(f'Вакансии отсортированы в порядке убывания минимальной зарплаты\n'
+                  f'Вакансий в списке: {len(vacancies_list)} шт.\n')
+        if user_input == '5':
+            top_n = int(input('Введите количество вакансий для вывода в топ N: '))
+            vacancies_list = get_top_vacancies(vacancies_list, top_n)
+            print(f'Вакансий в списке: {len(vacancies_list)}\n')
+        if user_input == '6':
+            print_vacancies(vacancies_list)
+        if user_input == '7':
+            file_name = input('Введите имя файла: \n')
+            file_path = os.path.join(ROOT_DIR, 'data', file_name + '.json')
+            json_file_handler = JSONFileHandler(file_path)
+            if not os.path.exists(file_path):
+                json_file_handler.write_vacancies_to_file(vacancies_list)
+                print('Вакансии сохранены в json-файл\n')
+                break
+            else:
+                print(f'Файл с таким именем уже существует.')
+                user_confirm = input(f'Хотите выполнить операции с этим файлом?\n'
+                                     f'Введите "Да" или "Нет"\n').lower().strip()
+                if user_confirm == 'нет':
+                    continue
+                elif user_confirm == 'да':
+                    user_confirm = input('Выберите, что вы хотите сделать с текущим файлом:\n'
+                                         '1 - Добавить вакансии в конец текущего файла\n'
+                                         '2 - Стереть прошлые данные и записать только текущие вакансии\n')
+                    if user_confirm == '1':
+                        json_file_handler.add_vacancies(vacancies_list)
+                        print(f'Текущие вакансии добавлены в конец файла {file_name}')
+                        quit()
+                    elif user_confirm == '2':
+                        json_file_handler.write_vacancies_to_file(vacancies_list)
+                        print(f'Прошлые вакансии удалены из файла, текущие вакансии сохранены в файл {file_name}')
+                        quit()
+                    else:
+                        print('Повторите попытку операции сохранения в файл')
+        if user_input in ['stop', 'стоп']:
+            quit()
+    else:
+        print('Введите порядковый номер операции, которую хотите выполнить')
+
+
+def work_with_vacancies_from_json():
+    """Функция позволяет пользователю работать с вакансиями
+    из json-файла"""
+    print("Добро пожаловать в программу работы с вакансиями из json-файла!\n"
+          "В данный момент ведется разработка данной функции.\n"
+          "Функционал будет доступен в следующей версии.\n"
+          "Можете пока что воспользоваться программой по работе с вакансиями с сайта hh.ru\n")

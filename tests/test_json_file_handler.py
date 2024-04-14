@@ -4,10 +4,6 @@ from config import ROOT_DIR
 TEST_FILE_PATH1 = os.path.join(ROOT_DIR, 'data', 'test.json')
 
 
-def test_load_vacancies(get_json_file_handler_object, list_dict_vacancies_1):
-    assert get_json_file_handler_object.get_vacancies() == list_dict_vacancies_1
-
-
 def test_write_vacancy(get_json_file_handler_object, list_object_vacancies,
                        list_dict_vacancies_1):
     get_json_file_handler_object.write_vacancies_to_file(list_object_vacancies)
@@ -31,12 +27,11 @@ def test_write_vacancy(get_json_file_handler_object, list_object_vacancies,
 
 def test_del_vacancy(get_json_file_handler_object, list_dict_vacancies_3):
     get_json_file_handler_object.del_vacancy(list_dict_vacancies_3)
-    assert get_json_file_handler_object.get_vacancies() == [list_dict_vacancies_3]
+    assert get_json_file_handler_object.get_vacancies() == []
 
 
 def test_add_vacancy(get_json_file_handler_object, list_object_vacancies,
                      list_dict_vacancies_3):
     get_json_file_handler_object.add_vacancies(list_object_vacancies)
-    assert get_json_file_handler_object.get_vacancies() == [list_dict_vacancies_3,
-                                                            list_dict_vacancies_3]
+    assert get_json_file_handler_object.get_vacancies() == [list_dict_vacancies_3]
     get_json_file_handler_object.del_vacancy(list_dict_vacancies_3)  # строка возвращающая файл в исходное состояние

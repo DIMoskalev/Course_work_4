@@ -15,6 +15,10 @@ class Handler(ABC):
         pass
 
     @abstractmethod
+    def add_vacancies(self, vacancies):
+        pass
+
+    @abstractmethod
     def add_vacancy(self, vacancy):
         pass
 

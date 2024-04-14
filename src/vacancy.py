@@ -1,4 +1,5 @@
 class Vacancy:
+    """Класс для работы с вакансиями"""
 
     def __init__(self, name, professional_roles, experience, employment, schedule,
                  employer, salary_from, salary_to, currency, requirement, responsibility, url):
@@ -17,6 +18,7 @@ class Vacancy:
 
     @classmethod
     def data_conversion(cls, vacancies_data):
+        """Класс-метод для создания экземпляров класса"""
         emp_list = []
         for vacancy in vacancies_data:
             name = vacancy['name']
@@ -43,6 +45,7 @@ class Vacancy:
         return emp_list
 
     def get_salary(self):
+        """Метод, направленный на обработку истинности диапазона заработной платы"""
         if not (self.salary_to or self.salary_from):
             return f'Зарплата: Не указана'
         else:
@@ -55,6 +58,7 @@ class Vacancy:
             return f'Зарплата: от {self.salary_from} до {self.salary_to} {self.currency}'
 
     def get_currency(self, currency):
+        """Метод, направленный на расшифровку валюты из кодового обозначения"""
         if currency:
             if currency == "RUR":
                 return "руб."
@@ -77,6 +81,7 @@ class Vacancy:
 
     @staticmethod
     def check_data_str(data):
+        """Статик-метод для проверки существования строковых значений(str)"""
         if data:
             return data
         else:
@@ -84,25 +89,26 @@ class Vacancy:
 
     @staticmethod
     def check_data_int(data):
+        """Статик-метод для проверки существования целочисленных значений(int)"""
         if data:
             return data
         return 0
 
-    def __gt__(self, other):
+    def __gt__(self, other):  # Для сравнения если >
         if not isinstance(other, (Vacancy, int)):
             raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
         if type(other) is type(self):
             return self.salary_from > other.salary_from
         return self.salary_from > other
 
-    def __ge__(self, other):
+    def __ge__(self, other):  # Для сравнения если >=
         if not isinstance(other, (Vacancy, int)):
             raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
         if type(other) is type(self):
             return self.salary_from >= other.salary_from
         return self.salary_from >= other
 
-    def __le__(self, other):
+    def __le__(self, other):  # Для сравнения если <=
         if not isinstance(other, (Vacancy, int)):
             raise TypeError("Значение справа должно иметь тип int или принадлежать классу Vacancy")
         if type(other) is type(self):

@@ -158,8 +158,7 @@ def work_with_vacancies_from_json():
                            '5 - Оставить топ N вакансий от начала списка\n'
                            '6 - Вывести информацию о вакансиях\n'
                            '7 - Сохранить текущие вакансии в текущий/новый json-файл\n'
-                           '8 - Удалить текущие вакансии из исходного json-файла, если они повторяются '
-                           '(альфа-версия функции, может работать некорректно).\n')
+                           '8 - Очистить текущий json-файл.\n')
         if user_input in ['1', '2', '3', '4', '5', '6', '7', '8']:
             if user_input == '1':
                 file_name = input('Введите имя файла: \n')
@@ -231,19 +230,15 @@ def work_with_vacancies_from_json():
                         else:
                             print('Повторите попытку операции сохранения в файл')
             if user_input == '8':
-                print('Данна функция еще находится в разработке и может работать некорректно.\n'
-                      'Наша команда все починит в следующем обновлении\n')
-                current_num_vacancies = len(vacancies_list)
-                vacancies_list = json_file_handler.del_duplicate_vacancies(vacancies_list)
-                new_num_vacancies = len(vacancies_list)
-                delta_num_vacancies = current_num_vacancies - new_num_vacancies
-                if current_num_vacancies != new_num_vacancies:
-                    print('Совпадающие вакансии удалены\n'
-                          f'Вакансий до удаления дубликатов: {current_num_vacancies}\n'
-                          f'Вакансий после удаления дубликатов: {new_num_vacancies}\n'
-                          f'Дубликатов было удалено: {delta_num_vacancies}')
-                else:
-                    print('Совпадений вакансий в текущем списке и в json-файле не найдено\n')
+                clear_confirm = input(f'Вы уверены, что хотите очистить файл?\n'
+                                      f'После выполнения операции, программа завершит свою работу.\n'
+                                      f'Введите "Да" или "Нет": \n').lower().strip()
+                if clear_confirm == 'нет':
+                    continue
+                elif clear_confirm == 'да':
+                    json_file_handler.clear_file()
+                    print('Файл очищен')
+                    quit()
             if user_input in ['stop', 'стоп']:
                 quit()
         if user_input in ['stop', 'стоп']:

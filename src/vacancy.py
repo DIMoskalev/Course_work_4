@@ -33,7 +33,7 @@ class Vacancy:
             else:
                 salary_from = cls.check_data_int(vacancy['salary']['from'])
                 salary_to = cls.check_data_int(vacancy['salary']['to'])
-                currency = cls.check_data_str(vacancy['salary']['currency'])
+                currency = cls.decode_currency(cls.check_data_str(vacancy['salary']['currency']))
             employer = vacancy['employer']['name']
             requirement = cls.check_data_str(vacancy['snippet']['requirement'])
             responsibility = cls.check_data_str(vacancy['snippet']['responsibility'])
@@ -81,25 +81,20 @@ class Vacancy:
                 return f'Зарплата: {self.salary_to} {self.currency}'
             return f'Зарплата: от {self.salary_from} до {self.salary_to} {self.currency}'
 
-    def get_currency(self, currency):
+    @staticmethod
+    def decode_currency(currency):
         """Метод, направленный на расшифровку валюты из кодового обозначения"""
+        currency_dict = {
+            "RUR": "руб.",
+            "KZT": "тенге",
+            "BYR": "белорус. руб",
+            "UZS": "узбек. сум",
+            "USD": "долл.",
+            "EUR": "евро",
+            "": "попугаев"
+        }
         if currency:
-            if currency == "RUR":
-                return "руб."
-            elif currency == "KZT":
-                return "тенге"
-            elif currency == "BYR":
-                return "белорус. руб"
-            elif currency == "UZS":
-                return "узбек. сум"
-            elif currency == "USD":
-                return "долл."
-            elif currency == "EUR":
-                return "евро"
-            elif not currency:
-                return "попугаев"
-            else:
-                return f'Неизвестная валюта {self.currency}'
+            return currency_dict.get(currency, f'Неизвестная валюта {currency}')
         else:
             return ""
 

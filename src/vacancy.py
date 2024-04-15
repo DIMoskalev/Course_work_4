@@ -21,11 +21,11 @@ class Vacancy:
         """Класс-метод для создания экземпляров класса"""
         emp_list = []
         for vacancy in vacancies_data:
-            name = vacancy['name']
-            professional_roles = vacancy['professional_roles'][0]['name']
-            experience = vacancy.get('experience').get('name')
-            employment = vacancy['employment']['name']
-            schedule = vacancy['schedule']['name']
+            name = cls.check_data_str(vacancy['name'])
+            professional_roles = cls.check_data_str(vacancy['professional_roles'][0]['name'])
+            experience = cls.check_data_str(vacancy.get('experience').get('name'))
+            employment = cls.check_data_str(vacancy['employment']['name'])
+            schedule = cls.check_data_str(vacancy['schedule']['name'])
             if not vacancy['salary']:
                 salary_from = 0
                 salary_to = 0
@@ -43,6 +43,30 @@ class Vacancy:
                              responsibility, url)
             emp_list.append(object_vac)
         return emp_list
+
+    @classmethod
+    def get_objects_for_data_conversion(cls, vacancies_list):
+        """Класс-метод для создания ЭК из словарей формата Vacancy.__dict__,
+        получаемых при выгрузке вакансий из файла"""
+        returned_list = []
+        for vacancy in vacancies_list:
+            name = vacancy['name']
+            professional_roles = vacancy['professional_roles']
+            experience = vacancy['experience']
+            employment = vacancy['employment']
+            schedule = vacancy['schedule']
+            salary_from = vacancy['salary_from']
+            salary_to = vacancy['salary_to']
+            currency = vacancy['currency']
+            employer = vacancy['employer']
+            requirement = vacancy['requirement']
+            responsibility = vacancy['responsibility']
+            url = vacancy['url']
+            vacancy_object = cls(name, professional_roles, experience, employment, schedule,
+                                 employer, salary_from, salary_to, currency, requirement,
+                                 responsibility, url)
+            returned_list.append(vacancy_object)
+        return returned_list
 
     def get_salary(self):
         """Метод, направленный на обработку истинности диапазона заработной платы"""
@@ -85,7 +109,7 @@ class Vacancy:
         if data:
             return data
         else:
-            return f'Данные не указаны'
+            return 'Данные не указаны'
 
     @staticmethod
     def check_data_int(data):

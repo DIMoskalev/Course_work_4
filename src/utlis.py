@@ -158,8 +158,9 @@ def work_with_vacancies_from_json():
                            '5 - Оставить топ N вакансий от начала списка\n'
                            '6 - Вывести информацию о вакансиях\n'
                            '7 - Сохранить текущие вакансии в текущий/новый json-файл\n'
-                           '8 - Очистить текущий json-файл.\n')
-        if user_input in ['1', '2', '3', '4', '5', '6', '7', '8']:
+                           '8 - Очистить текущий json-файл.\n'
+                           '9 - Удалить json-файл\n')
+        if user_input in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
             if user_input == '1':
                 file_name = input('Введите имя файла: \n')
                 file_path = os.path.join(ROOT_DIR, 'data', file_name + '.json')
@@ -238,6 +239,16 @@ def work_with_vacancies_from_json():
                 elif clear_confirm == 'да':
                     json_file_handler.clear_file()
                     print('Файл очищен')
+                    quit()
+            if user_input == '9':
+                clear_confirm = input(f'Вы уверены, что хотите удалить файл?\n'
+                                      f'После выполнения операции, программа завершит свою работу.\n'
+                                      f'Введите "Да" или "Нет": \n').lower().strip()
+                if clear_confirm == 'нет':
+                    continue
+                elif clear_confirm == 'да':
+                    os.remove(file_path)
+                    print(f'Файл {file_path} удален')
                     quit()
             if user_input in ['stop', 'стоп']:
                 quit()

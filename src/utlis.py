@@ -158,7 +158,8 @@ def work_with_vacancies_from_json():
                            '5 - Оставить топ N вакансий от начала списка\n'
                            '6 - Вывести информацию о вакансиях\n'
                            '7 - Сохранить текущие вакансии в текущий/новый json-файл\n'
-                           '8 - Удалить текущие вакансии из исходного json-файла, если они повторяются\n')
+                           '8 - Удалить текущие вакансии из исходного json-файла, если они повторяются '
+                           '(альфа-версия функции, может работать некорректно).\n')
         if user_input in ['1', '2', '3', '4', '5', '6', '7', '8']:
             if user_input == '1':
                 file_name = input('Введите имя файла: \n')
@@ -232,9 +233,9 @@ def work_with_vacancies_from_json():
             if user_input == '8':
                 print('Данна функция еще находится в разработке и может работать некорректно.\n'
                       'Наша команда все починит в следующем обновлении\n')
-                current_num_vacancies = int(len(vacancies_list))
+                current_num_vacancies = len(vacancies_list)
                 vacancies_list = json_file_handler.del_duplicate_vacancies(vacancies_list)
-                new_num_vacancies = int(len(vacancies_list))
+                new_num_vacancies = len(vacancies_list)
                 delta_num_vacancies = current_num_vacancies - new_num_vacancies
                 if current_num_vacancies != new_num_vacancies:
                     print('Совпадающие вакансии удалены\n'

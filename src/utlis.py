@@ -106,6 +106,7 @@ def work_with_vacancies_from_api():
                 print(f'Вакансий в списке: {len(vacancies_list)}\n')
             if user_input == '6':
                 print_vacancies(vacancies_list)
+                print(f'Выведено вакансий: {len(vacancies_list)}')
             if user_input == '7':
                 file_name = input('Введите имя файла: \n')
                 file_path = os.path.join(ROOT_DIR, 'data', file_name + '.json')
@@ -199,6 +200,7 @@ def work_with_vacancies_from_json():
                 print(f'Вакансий в списке: {len(vacancies_list)}\n')
             if user_input == '6':
                 print_vacancies(vacancies_list)
+                print(f'Выведено вакансий: {len(vacancies_list)}')
             if user_input == '7':
                 file_name = input('Введите имя файла: \n')
                 file_path = os.path.join(ROOT_DIR, 'data', file_name + '.json')
@@ -230,9 +232,9 @@ def work_with_vacancies_from_json():
             if user_input == '8':
                 print('Данна функция еще находится в разработке и может работать некорректно.\n'
                       'Наша команда все починит в следующем обновлении\n')
-                current_num_vacancies = len(vacancies_list)
+                current_num_vacancies = int(len(vacancies_list))
                 vacancies_list = json_file_handler.del_duplicate_vacancies(vacancies_list)
-                new_num_vacancies = len(vacancies_list)
+                new_num_vacancies = int(len(vacancies_list))
                 delta_num_vacancies = current_num_vacancies - new_num_vacancies
                 if current_num_vacancies != new_num_vacancies:
                     print('Совпадающие вакансии удалены\n'

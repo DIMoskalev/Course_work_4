@@ -46,12 +46,7 @@ class JSONFileHandler(Handler):
         with open(self.file_path, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
-    def del_duplicate_vacancies(self, vacancies):
-        """Метод позволяет удалять совпадающие вакансии текущего списка из json файла"""
-        with open(self.file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            for vacancy in vacancies:
-                while vacancy in data:
-                    data.remove(vacancies)
+    def clear_file(self):
+        """Метод позволяет очищать json файл"""
         with open(self.file_path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=4)
+            pass

@@ -228,6 +228,8 @@ def work_with_vacancies_from_json():
                         else:
                             print('Повторите попытку операции сохранения в файл')
             if user_input == '8':
+                print('Данна функция еще находится в разработке и может работать некорректно.\n'
+                      'Наша команда все починит в следующем обновлении\n')
                 current_num_vacancies = len(vacancies_list)
                 vacancies_list = json_file_handler.del_duplicate_vacancies(vacancies_list)
                 new_num_vacancies = len(vacancies_list)
